@@ -1,0 +1,54 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Stuff list membership join</title>
+        <style>
+            body {
+                text-align: center;
+                margin: 100px auto 0;
+            }
+            .status {
+                font-size: 14pt;
+                padding: 15px;
+                margin: 10px auto;
+                max-width: 360px;
+            }
+            .status.success {
+                color: green;
+            }
+            .status.error {
+                color: red;
+            }
+            form input[type="text"] {
+                height: 50px;
+                width: 500px;
+                border: solid 1px gray;
+                font-size: 16pt;
+                padding: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <form action="{{ url_for('register') }}" method="POST">
+            <h1>Sign up for <a href='mailto:{{ GAPPS_GROUP }}@{{ GAPPS_DOMAIN }}'>{{ GAPPS_GROUP }}@{{ GAPPS_DOMAIN }}</a> list</h1>
+            <input type="text" placeholder="Username, e.g rodrigo.chacon" name="username">
+            <button type="submit">Sign up</button>
+            <div class="status"></div>
+        </form>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <script>
+            $(function(){
+                $("form").submit(function(){
+                    var status = $(".status", this);
+                    status.html('wait for it...').removeClass('error success').addClass('loading');
+
+                    $.post(this.action, $(this).serialize(), function(response){
+                        status.html(response.message).addClass((response.status === 0) ? 'success' : 'error');
+                    }, "json");
+
+                    return false;
+                });
+            });
+        </script>
+    </body>
+</html>
